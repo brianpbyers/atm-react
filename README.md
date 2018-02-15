@@ -66,7 +66,7 @@ Clone this repo, and run `npm install` from inside it. The repo already includes
 
 > There are several ways to implement a form in React, here we took the approach as described in [these docs](https://reactjs.org/docs/forms.html).
 
-4. Add a input value to the component state that is set to whatever value is typed into the text entry.
+4. Add a variable to the component state that is set to whatever value is typed into the text entry.
 
     <details>
     <summary>Hint:</summary>
