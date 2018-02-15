@@ -64,69 +64,100 @@ Clone this repo, and run `npm install` from inside it. The repo already includes
 
 <img src="https://media.giphy.com/media/26xBMuHu0ZFngH7Ta/giphy.gif">
 
+> There are several ways to implement a form in React, here we took the approach as described in [these docs](https://reactjs.org/docs/forms.html).
 
-4. Set a `ref` on the text field for targeting. This way we can access the data in the later when we want to know what values to add/subtract from our account.
+4. Add a input value to the component state that is set to whatever value is typed into the text entry.
 
     <details>
     <summary>Hint:</summary>
 
-    ```html
-      <input type="text" placeholder="enter an amount" ref="amount" />
-    ```
+    ```javascript
+    this.state = {
+      balance : 0,
+      valueInput:''
+    }
 
+    // bind the "this" object to the handleChange function
+    this.handleChange = this.handleChange.bind(this);
+    
+    ...
+    
+    handleChange(event) {
+        this.setState({valueInput: event.target.value})
+    }
+    
+    ...
+    // attach the listener to the input
+    <input type="text" placeholder="enter an amount" value={this.state.valueInput} onChange={this.handleChange}/>
+    ```
     </details>
 
-5. When the `Deposit` button is clicked, you should add the amount entered in the text field to the balance
+5. Add a function that adds the input value to the current balance when the user clicks 'deposit'
 
     <details>
-    <summary>Click for code walkthrough:</summary>
-    a. Add a click handler in your input tags in our JSX return block:
-
-    ```html
-      <input type="button" value="Deposit" onClick={(e) => this.handleDepositClick(e)} />
-    ```
-
-    b. Define a click handler method within the `Account` class
+    <summary>Hint:</summary>
 
     ```javascript
-      handleDepositClick(e) {
-        // It is good practice to still prevent default behavior
-        e.preventDefault()
-        // set a local variable to the amount entered in the text box.
-        let amount = this.refs.amount.value
-        // set a local variable to the new balance based off of the original balance + amount
-        let newBalance = this.state.balance + amount;
-        // set the balance to the newBalance using the setState method (necessary)
-        this.setState({
-          balance: newBalance
-        })
-        // empty out the text box in this component
-        this.refs.amount.value = '';
-      }
+        // bind this object to the function
+        this.handleDepositClick = this.handleDepositClick.bind(this);
+        
+        ...
+        
+        // define the function
+        handleDepositClick(event) {
+
+            this.setState({
+              balance : parseInt(this.state.balance) + parseInt(this.state.valueInput),
+              valueInput : ''
+            })
+
+        }
+
+        ...
+        // attach event listener
+        <input type="button" value="Deposit" onClick={ (event) => this.handleDepositClick(event)}/>
+
     ```
-
-     PS - the amount entered in the text field will initially be a string, so you'll need to convert that to a number
-
-
-
     </details>
 
-
-
-6. When the `Withdraw` button is clicked, you should deduct the amount entered in the text field to the balance.  **You should not be able to withdraw more than the current balance**
+6. Add a function that subtracts the input value to the current balance when the user clicks 'withdraw'
 
     <details>
+    <summary>Hint:</summary>
 
-    <summary>Click for hint:</summary>
+    ```javascript
+        this.handleWithdrawClick = this.handleWithdrawClick.bind(this);
+        
+        ...
+  
+        handleWithdrawClick(event) {
+            
+            let newBalance = parseInt(this.state.balance) - parseInt(this.state.valueInput)
+            
+            if ( newBalance >= 0 ){            
+                this.setState({
+                  balance : newBalance,
+                  valueInput : ''
+                })
+            } else {
+                this.setState({
+                  balance : 0,
+                  valueInput : ''
+                })
+            }
+        }
 
-      Try to mirror the functionality of the Deposit function above.
+        ...
 
+        <input type="button" value="Deposit" onClick={ (event) => this.handleWithdrawClick(event)}/>
+
+    ```
     </details>
 
 
 7. If the current balance is 0, you should add a class of `zero` to the `<div className="balance">`. You can complete these computations in the render method, but before the JSX portion is returned.
     <details>
-    <summary>Click for code walkthrough:</summary>
+    <summary>Hint:</summary>
         In the Account.js render method:
 
     ```javascript
